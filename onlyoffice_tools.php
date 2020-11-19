@@ -38,8 +38,13 @@ class OnlyofficeTools {
         $documentId = $document_data["id"];
         $urlToEdit = $urlToEdit . "docId=" . $documentId;
 
+        $attr = [
+            "style" => "float:right; margin-left:5px;",
+            "target" => "_blank"
+        ];
+
         if ($canEdit || $canView) {
-        return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('editByOnlyoffice')), $urlToEdit);
+        return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('openByOnlyoffice')), $urlToEdit, $attr);
         }
     }
 }
