@@ -15,7 +15,7 @@ class HookDocumentItemActionOnlyoffice extends HookObserver implements HookDocum
     }
 
     /**
-     * Create a Onlyoffice edit tools when the Chamilo loads document page.
+     * Create a Onlyoffice edit tools when the Chamilo loads document items
      *
      * @param HookDocumentItemActionEventInterface $event - the hook event
      */

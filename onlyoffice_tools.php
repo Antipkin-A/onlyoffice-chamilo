@@ -47,4 +47,23 @@ class OnlyofficeTools {
             return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('openByOnlyoffice')), $urlToEdit, $attr);
         }
     }
+
+    /**
+     * Return button-link to onlyoffice create new
+     * 
+     * @return Display
+     */
+    public static function getButtonCreateNew () {
+
+        $plugin = OnlyofficePlugin::create();
+
+        $isEnable = $plugin->get("enableOnlyofficePlugin") === 'true';
+        if (!$isEnable) {
+            return;
+        }
+
+        $urlToCreate = "link to create_new";
+
+        return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('createNew')), $urlToCreate);
+    }
 }

@@ -8,3 +8,4 @@ $strings['plugin_comment'] = "ONLYOFFICE connector allows you to view, edit and 
 $strings["enableOnlyofficePlugin"] = "Enable";
 $strings["documentServerUrl"] = "Document Editing Service address";
 $strings["openByOnlyoffice"] = "Open by onlyoffice";
+$strings["createNew"] = "Create new";
