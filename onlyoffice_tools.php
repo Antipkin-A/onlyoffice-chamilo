@@ -44,7 +44,7 @@ class OnlyofficeTools {
         ];
 
         if ($canEdit || $canView) {
-        return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('openByOnlyoffice')), $urlToEdit, $attr);
+            return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('openByOnlyoffice')), $urlToEdit, $attr);
         }
     }
 }
