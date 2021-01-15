@@ -81,7 +81,7 @@ if ($canEdit && $accessRights) {
     $config["editorConfig"]["callbackUrl"] = getCallbackUrl($docId, $userId, $courseId, $sessionId, $groupId);
 } else {
     $canView = in_array($extension, FileUtility::$can_view_types) ? true : false;
-    if ($canView && $accessRights) {
+    if ($canView) {
         $config["editorConfig"]["mode"] = "view";
     } else {
         api_not_allowed(true);
