@@ -155,17 +155,10 @@ function download() {
         return $result;
     }
 
-    list ($isAllowToEdit, $isMyDir, $isGroupAccess) = getPermissions($docInfo, $userId, $courseId, $groupId, $sessionId);
+    @header('Content-Type: application/octet-stream');
+    @header('Content-Disposition: attachment; filename=' . $docInfo["title"]);
 
-    if ($isAllowToEdit || $isMyDir || $isGroupAccess) {
-        @header('Content-Type: application/octet-stream');
-        @header('Content-Disposition: attachment; filename=' . $docInfo["title"]);
-    
-        readfile($filePath);
-    } else {
-        $result['error'] = 'Access denide';
-        return $result;
-    }
+    readfile($filePath);
 }
 
 /**
