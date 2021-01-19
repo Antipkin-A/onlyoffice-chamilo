@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__.'/HookDocumentItemActionOnlyoffice.php';
-require_once __DIR__.'/HookDocumentActionOnlyoffice.php';
+require_once __DIR__.'/onlyofficeItemActionObserver.php';
+require_once __DIR__.'/onlyofficeActionObserver.php';
 
 /**
  * Plugin class for the Onlyoffice plugin.
@@ -58,10 +58,10 @@ class OnlyofficePlugin extends Plugin implements HookPluginInterface
      */
     public function installHook()
     {
-        $itemActionObserver = HookDocumentItemActionOnlyoffice::create();
+        $itemActionObserver = OnlyofficeItemActionObserver::create();
         HookDocumentItemAction::create()->attach($itemActionObserver);
 
-        $actionObserver = HookDocumentActionOnlyoffice::create();
+        $actionObserver = OnlyofficeActionObserver::create();
         HookDocumentAction::create()->attach($actionObserver);
     }
 
@@ -70,10 +70,10 @@ class OnlyofficePlugin extends Plugin implements HookPluginInterface
      */
     public function uninstallHook()
     {
-        $itemActionObserver = HookDocumentItemActionOnlyoffice::create();
+        $itemActionObserver = OnlyofficeItemActionObserver::create();
         HookDocumentItemAction::create()->detach($itemActionObserver);
 
-        $actionObserver = HookDocumentActionOnlyoffice::create();
+        $actionObserver = OnlyofficeActionObserver::create();
         HookDocumentAction::create()->detach($actionObserver);
     }
 }

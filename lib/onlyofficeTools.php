@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__.'/fileutility.php';
-require_once __DIR__.'/onlyoffice_plugin.php';
+require_once __DIR__.'/fileUtility.php';
+require_once __DIR__.'/onlyofficePlugin.php';
 
 class OnlyofficeTools {
 

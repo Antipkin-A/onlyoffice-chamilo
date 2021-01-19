@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__.'/onlyoffice_tools.php';
+require_once __DIR__.'/onlyofficeTools.php';
 
-class HookDocumentItemActionOnlyoffice extends HookObserver implements HookDocumentItemActionObserverInterface
+class OnlyofficeItemActionObserver extends HookObserver implements HookDocumentItemActionObserverInterface
 {
     /**
      * Constructor

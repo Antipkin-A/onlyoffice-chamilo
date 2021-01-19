@@ -3,5 +3,5 @@
 /**
  * uninstall the plugin
  */
-require_once __DIR__.'/onlyoffice_plugin.php';
+require_once __DIR__.'/lib/onlyofficePlugin.php';
 OnlyofficePlugin::create()->uninstall();
