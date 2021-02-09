@@ -59,6 +59,6 @@ class OnlyofficeTools {
 
         $urlToCreate = "link to create_new";
 
-        return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_edit.png', $plugin->get_lang('createNew')), $urlToCreate);
+        return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_create.png', $plugin->get_lang('createNew')), $urlToCreate);
     }
 }
