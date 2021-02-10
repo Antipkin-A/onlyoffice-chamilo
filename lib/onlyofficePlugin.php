@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__.'/onlyofficeItemActionObserver.php';
-require_once __DIR__.'/onlyofficeActionObserver.php';
-
 /**
  * Plugin class for the Onlyoffice plugin.
  *

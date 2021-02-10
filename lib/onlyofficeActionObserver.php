@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__.'/onlyofficeTools.php';
-
 class OnlyofficeActionObserver extends HookObserver implements HookDocumentActionObserverInterface
 {
     /**

@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__.'/fileUtility.php';
-require_once __DIR__.'/onlyofficePlugin.php';
-
 class OnlyofficeTools {
 
     /**
@@ -57,7 +54,7 @@ class OnlyofficeTools {
             return;
         }
 
-        $urlToCreate = "link to create_new";
+        $urlToCreate = api_get_path(WEB_PLUGIN_PATH) . "onlyoffice/create.php";
 
         return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_create.png', $plugin->get_lang('createNew')), $urlToCreate);
     }
