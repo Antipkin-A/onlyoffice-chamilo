@@ -54,7 +54,16 @@ class OnlyofficeTools {
             return;
         }
 
-        $urlToCreate = api_get_path(WEB_PLUGIN_PATH) . "onlyoffice/create.php";
+        $courseId = api_get_course_int_id();
+        $sessionId = api_get_session_id();
+        $groupId = api_get_group_id();
+        $userId = api_get_user_id();
+
+        $urlToCreate = api_get_path(WEB_PLUGIN_PATH) . "onlyoffice/create.php?folderId=" . $_GET["id"] 
+                                                        . "&courseId=" . $courseId 
+                                                        . "&groupId=" . $groupId 
+                                                        . "&sessionId=" . $sessionId
+                                                        . "&userId=" . $userId;
 
         return Display::url(Display::return_icon('../../plugin/onlyoffice/resources/onlyoffice_create.png', $plugin->get_lang('createNew')), $urlToCreate);
     }

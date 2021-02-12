@@ -83,6 +83,27 @@ class FileUtility {
     }
 
     /**
+     * Return file extension by file type
+     * 
+     * @param string $type - type of file
+     * 
+     * @return string
+     */
+    public static function getDocExt($type) {
+        if ($type === "text") {
+            return "docx";
+        }
+        if ($type === "spreadsheet") {
+            return "xlsx";
+        }
+        if ($type === "presentation") {
+            return "pptx";
+        }
+
+        return "";
+    }
+
+    /**
      * Return file url for download
      * 
      * @param int $courseId - identifier of course
