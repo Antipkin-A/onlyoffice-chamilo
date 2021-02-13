@@ -28,10 +28,11 @@ $userId = api_get_user_id();
 $userInfo = api_get_user_info($userId);
 
 $sessionId = api_get_session_id();
-$courseId = api_get_course_id();
+$courseId = api_get_course_int_id();
 $courseInfo = api_get_course_info();
+$courseCode = $courseInfo["code"];
 
-$docInfo = DocumentManager::get_document_data_by_id($docId, $courseId, false, $sessionId);
+$docInfo = DocumentManager::get_document_data_by_id($docId, $courseCode, false, $sessionId);
 
 $extension = strtolower(pathinfo($docInfo["title"], PATHINFO_EXTENSION));
 
@@ -39,7 +40,7 @@ $langId = SubLanguageManager::get_platform_language_id();
 $lang = api_get_language_info($langId);
 
 $docType = FileUtility::getDocType($extension);
-$key = FileUtility::getKey($courseId, $docId);
+$key = FileUtility::getKey($courseCode, $docId);
 $fileUrl = FileUtility::getFileUrl($courseId, $userId, $docId, $sessionId, $groupId);
 
 $isAllowToEdit = api_is_allowed_to_edit(true, true);
@@ -68,7 +69,7 @@ $isGroupAccess = false;
 if (!empty($groupId)) {
     $groupProperties = GroupManager::get_group_properties($groupId);
     $docInfoGroup = api_get_item_property_info(api_get_course_int_id(), 'document', $docId, $sessionId);
-    $isGroupAccess = GroupManager::allowUploadEditDocument($userId, $courseId, $groupProperties, $docInfoGroup);
+    $isGroupAccess = GroupManager::allowUploadEditDocument($userId, $courseCode, $groupProperties, $docInfoGroup);
 }
 
 $accessRights = $isAllowToEdit || $isMyDir || $isGroupAccess ? true : false;

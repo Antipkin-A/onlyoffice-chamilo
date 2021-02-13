@@ -133,7 +133,7 @@ class FileUtility {
     /**
      * Return file key
      * 
-     * @param int $courseId - identifier of course
+     * @param string $courseCode - identifier of course
      * @param int $userId - identifier of user
      * @param int $docId - identifier of document
      * @param int $sessionId - identifier of session
@@ -141,8 +141,8 @@ class FileUtility {
      * 
      * @return string
      */
-    public static function getKey($courseId, $docId) {
-        $docInfo = DocumentManager::get_document_data_by_id($docId, $courseId);
+    public static function getKey($courseCode, $docId) {
+        $docInfo = DocumentManager::get_document_data_by_id($docId, $courseCode);
         $mtime = filemtime($docInfo["absolute_path"]);
 
         $key = $mtime . $courseId . $docId;

@@ -28,21 +28,24 @@ if (isset($_GET["type"]) && !empty($_GET["type"])) {
     $groupId = isset($_GET["groupId"]) && !empty($_GET["groupId"]) ? $_GET["groupId"] : null;
     $sessionId = isset($_GET["sessionId"]) ? $_GET["sessionId"] : null;
 
+    $courseInfo = api_get_course_info_by_id($courseId);
+    $courseCode = $courseInfo["code"];
+
     if (!empty($userId)) {
         $userInfo = api_get_user_info($userId);
     } else {
-        $result['error'] = 'User not found';
+        $result["error"] = "User not found";
         die (json_encode($result));
     }
 
     if (api_is_anonymous()) {
         $loggedUser = [
-            'user_id' => $userInfo["id"],
-            'status' => $userInfo["status"],
-            'uidReset' => true,
+            "user_id" => $userInfo["id"],
+            "status" => $userInfo["status"],
+            "uidReset" => true,
         ];
 
-        Session::write('_user', $loggedUser);
+        Session::write("_user", $loggedUser);
         Login::init_user($loggedUser["user_id"], true);
     } else {
         $userId = api_get_user_id();
@@ -56,8 +59,8 @@ if (isset($_GET["type"]) && !empty($_GET["type"])) {
             $response_array = download();
             die (json_encode($response_array));
         default:
-            $response_array['status'] = 'error';
-            $response_array['error'] = '404 Method not found';
+            $response_array["status"] = "error";
+            $response_array["error"] = "404 Method not found";
             die(json_encode($response_array));
     }
 }
@@ -68,13 +71,14 @@ if (isset($_GET["type"]) && !empty($_GET["type"])) {
 function track() {
     $result = [];
 
-    global $courseId;
+    global $courseCode;
     global $userId;
     global $docId;
     global $groupId;
     global $sessionId;
+    global $courseInfo;
 
-    if (($body_stream = file_get_contents('php://input')) === false) {
+    if (($body_stream = file_get_contents("php://input")) === false) {
         $result["error"] = "Bad Request";
         return $result;
     }
@@ -95,30 +99,49 @@ function track() {
 
             $downloadUri = $data["url"];
 
-            if (!empty($docId) && !empty($courseId)) {
-                $docInfo = DocumentManager::get_document_data_by_id($docId, $courseId);
+            if (!empty($docId) && !empty($courseCode)) {
+                $docInfo = DocumentManager::get_document_data_by_id($docId, $courseCode, false, $sessionId);
 
                 if ($docInfo === false) {
-                    $result['error'] = 'File not found';
+                    $result["error"] = "File not found";
                     return $result;
                 }
 
                 $filePath = $docInfo["absolute_path"];
             } else {
-                $result['error'] = 'Bad Request';
+                $result["error"] = "Bad Request";
                 return $result;
             }
 
-            list ($isAllowToEdit, $isMyDir, $isGroupAccess) = getPermissions($docInfo, $userId, $courseId, $groupId, $sessionId);
+            list ($isAllowToEdit, $isMyDir, $isGroupAccess) = getPermissions($docInfo, $userId, $courseCode, $groupId, $sessionId);
 
             if (($new_data = file_get_contents($downloadUri)) === false) {
                 break;
             }
 
             if ($isAllowToEdit || $isMyDir || $isGroupAccess) {
-                file_put_contents($filePath, $new_data, LOCK_EX);
-                $track_result = 0;
-                break;
+                
+                $groupInfo = GroupManager::get_group_properties($groupId);
+                if ($fp = @fopen($filePath, "w")) {
+                    fputs($fp, $new_data);
+                    fclose($fp);
+                    api_item_property_update($courseInfo,
+                                                TOOL_DOCUMENT,
+                                                $docId,
+                                                "DocumentUpdated",
+                                                $userId,
+                                                $groupInfo,
+                                                null,
+                                                null,
+                                                null,
+                                                $sessionId);
+                    update_existing_document($courseInfo,
+                                                $docId,
+                                                filesize($filePath),
+                                                false);
+                    $track_result = 0;
+                    break;
+                }
             }
 
         case TrackerStatus_Editing:
@@ -136,28 +159,29 @@ function track() {
  * Downloading file by the document service
  */
 function download() {
-    global $courseId;
+    global $courseCode;
     global $userId;
     global $docId;
     global $groupId;
     global $sessionId;
+    global $courseInfo;
 
-    if (!empty($docId) && !empty($courseId)) {
-        $docInfo = DocumentManager::get_document_data_by_id($docId, $courseId);
+    if (!empty($docId) && !empty($courseCode)) {
+        $docInfo = DocumentManager::get_document_data_by_id($docId, $courseCode, false, $sessionId);
 
         if ($docInfo === false) {
-            $result['error'] = 'File not found';
+            $result["error"] = "File not found";
             return $result;
         }
 
         $filePath = $docInfo["absolute_path"];
     } else {
-        $result['error'] = 'File not found';
+        $result["error"] = "File not found";
         return $result;
     }
 
-    @header('Content-Type: application/octet-stream');
-    @header('Content-Disposition: attachment; filename=' . $docInfo["title"]);
+    @header("Content-Type: application/octet-stream");
+    @header("Content-Disposition: attachment; filename=" . $docInfo["title"]);
 
     readfile($filePath);
 }
@@ -167,23 +191,23 @@ function download() {
  * 
  * @param array $docInfo - identifier of document
  * @param int $userId - identifier of user
- * @param int $courseId - identifier of course
+ * @param string $courseCode - identifier of course
  * @param int $groupId - identifier of group or null if file out of group
  * @param int $sessionId - identifier of session
  * 
  * @return array
  */
-function getPermissions($docInfo, $userId, $courseId, $groupId, $sessionId) {
+function getPermissions($docInfo, $userId, $courseCode, $groupId, $sessionId) {
     $isAllowToEdit = api_is_allowed_to_edit(true, true);
     $isMyDir = DocumentManager::is_my_shared_folder($userId, $docInfo["absolute_parent_path"], $sessionId);
 
     $isGroupAccess = false;
     if (!empty($groupId)) {
-        $courseInfo = api_get_course_info($courseId);
-        Session::write('_real_cid', $courseInfo["real_id"]);
+        $courseInfo = api_get_course_info($courseCode);
+        Session::write("_real_cid", $courseInfo["real_id"]);
         $groupProperties = GroupManager::get_group_properties($groupId);
-        $docInfoGroup = api_get_item_property_info($courseInfo["real_id"], 'document', $docInfo["id"], $sessionId);
-        $isGroupAccess = GroupManager::allowUploadEditDocument($userId, $courseId, $groupProperties, $docInfoGroup);
+        $docInfoGroup = api_get_item_property_info($courseInfo["real_id"], "document", $docInfo["id"], $sessionId);
+        $isGroupAccess = GroupManager::allowUploadEditDocument($userId, $courseCode, $groupProperties, $docInfoGroup);
     }
 
     return [$isAllowToEdit, $isMyDir, $isGroupAccess];
