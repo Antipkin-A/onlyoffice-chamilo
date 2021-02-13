@@ -117,58 +117,59 @@ function getCallbackUrl($docId, $userId, $courseId, $sessionId, $groupId) {
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <title>ONLYOFFICE</title>
-    <style>
-        #app > iframe {
-            position: absolute;
-            vertical-align: top;
-        }
-
-        body {
-            background: #fff;
-            color: #333;
-            font-family: Arial, Tahoma,sans-serif;
-            font-size: 12px;
-            font-weight: normal;
-            height: 100%;
-            margin: 0;
-            overflow-y: hidden;
-            padding: 0;
-            text-decoration: none;
-        }
-    </style>
-    <script type="text/javascript" src=<?php echo $docApiUrl?>></script>
-    <script type="text/javascript">
-        var onAppReady = function () {
-            innerAlert("Document editor ready");
+<title>ONLYOFFICE</title>
+<style>
+    #app-onlyoffice {
+        display: flex;
+        min-height: calc(100% - 135px);
+        width: 112.1%;
+        box-sizing: border-box;
+        position: relative;
+        margin-left: -69px;
+    }
+    #app > iframe {
+        position: absolute;
+        top: -21px;
+        left: 0px;
+    }
+    body {
+        height: 100%;
+        width: 100%;
+        overflow-y: hidden;
+    }
+    .pull-right,
+    .breadcrumb {
+        display: none;
+    }
+    .navbar-default {
+        margin-bottom: 0px;
+    }
+</style>
+<script type="text/javascript" src=<?php echo $docApiUrl?>></script>
+<script type="text/javascript">
+    var onAppReady = function () {
+        innerAlert("Document editor ready");
+    };
+    var connectEditor = function () {
+        var config = <?php echo json_encode($config)?>;
+        config.events = {
+            "onAppReady": onAppReady
         };
-        var connectEditor = function () {
-            var config = <?php echo json_encode($config)?>;
-            config.events = {
-                'onAppReady': onAppReady
-            };
 
-            docEditor = new DocsAPI.DocEditor("iframeEditor", config);
-        }
+        docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+    }
 
-        if (window.addEventListener) {
-            window.addEventListener("load", connectEditor);
-        } else if (window.attachEvent) {
-            window.attachEvent("load", connectEditor);
-        }
+    if (window.addEventListener) {
+        window.addEventListener("load", connectEditor);
+    } else if (window.attachEvent) {
+        window.attachEvent("load", connectEditor);
+    }
 
-    </script>
-</head>
-<body>
+</script>
+<?php echo Display::display_header(); ?>
+<div id="app-onlyoffice">
     <div id="app">
-        <div id='iframeEditor'>
+        <div id="iframeEditor">
         </div>
     </div>
-</body>
+</div>
