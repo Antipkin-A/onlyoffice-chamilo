@@ -116,16 +116,21 @@ class FileUtility {
      */
     public static function getFileUrl($courseId, $userId, $docId, $sessionId, $groupId) {
 
-        $url = api_get_path(WEB_PLUGIN_PATH) . self::app_name . "/" 
-                                                . "callback.php?type=download"
-                                                . "&courseId=" . $courseId
-                                                . "&userId=" . $userId
-                                                . "&docId=" . $docId
-                                                . "&sessionId=" . $sessionId;
+        $data = [
+            "type" => "download",
+            "courseId" => $courseId,
+            "userId" => $userId,
+            "docId" => $docId,
+            "sessionId" => $sessionId
+        ];
 
         if (!empty($groupId)) {
-            $url = $url . "&groupId=" . $groupId;
+            $data["groupId"] = $groupId;
         }
+
+        $hashUrl = Crypt::GetHash($data);
+
+        $url = api_get_path(WEB_PLUGIN_PATH) . self::app_name . "/" . "callback.php?hash=" . $hashUrl;
 
         return $url;
     }

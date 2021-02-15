@@ -103,17 +103,22 @@ $config["document"]["permissions"]["edit"] = $accessRights;
  */
 function getCallbackUrl($docId, $userId, $courseId, $sessionId, $groupId) {
     $url = "";
-    if (!empty($docId) && !empty($userId) && !empty($courseId)) {
-        $url = $url . api_get_path(WEB_PLUGIN_PATH) . "onlyoffice/callback.php?type=track"
-                                                    . "&courseId=" . $courseId
-                                                    . "&userId=" . $userId
-                                                    . "&sessionId=" . $sessionId
-                                                    . "&docId=" . $docId;
-    }
+
+    $data = [
+        "type" => "track",
+        "courseId" => $courseId,
+        "userId" => $userId,
+        "docId" => $docId,
+        "sessionId" => $sessionId
+    ];
 
     if (!empty($groupId)) {
-        $url = $url . "&groupId=" . $groupId;
+        $data["groupId"] = $groupId;
     }
+
+    $hashUrl = Crypt::GetHash($data);
+
+    $url = $url . api_get_path(WEB_PLUGIN_PATH) . "onlyoffice/callback.php?hash=" . $hashUrl;
 
     return $url;
 }

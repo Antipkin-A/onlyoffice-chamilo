@@ -14,19 +14,25 @@ const TrackerStatus_Closed = 4;
 const TrackerStatus_ForceSave = 6;
 const TrackerStatus_CorruptedForceSave = 7;
 
-if (isset($_GET["type"]) && !empty($_GET["type"])) {
+if (isset($_GET["hash"]) && !empty($_GET["hash"])) {
     $response_array;
     @header( 'Content-Type: application/json; charset==utf-8');
     @header( 'X-Robots-Tag: noindex' );
     @header( 'X-Content-Type-Options: nosniff' );
 
-    $type = $_GET["type"];
+    list ($hashData, $error) = Crypt::ReadHash($_GET["hash"]);
+    if ($hashData === null) {
+        $response_array["status"] = "error";
+        $response_array["error"] = $error;
+        die(json_encode($response_array));
+    }
 
-    $courseId = isset($_GET["courseId"]) && !empty($_GET["courseId"]) ? $_GET["courseId"] : null;
-    $userId = isset($_GET["userId"]) && !empty($_GET["userId"]) ? $_GET["userId"] : null;
-    $docId = isset($_GET["docId"]) && !empty($_GET["docId"]) ? $_GET["docId"] : null;
-    $groupId = isset($_GET["groupId"]) && !empty($_GET["groupId"]) ? $_GET["groupId"] : null;
-    $sessionId = isset($_GET["sessionId"]) ? $_GET["sessionId"] : null;
+    $type = $hashData->type;
+    $courseId = $hashData->courseId;
+    $userId = $hashData->userId;
+    $docId = $hashData->docId;
+    $groupId = $hashData->groupId;
+    $sessionId = $hashData->sessionId;
 
     $courseInfo = api_get_course_info_by_id($courseId);
     $courseCode = $courseInfo["code"];
@@ -120,8 +126,8 @@ function track() {
             }
 
             if ($isAllowToEdit || $isMyDir || $isGroupAccess) {
-                
                 $groupInfo = GroupManager::get_group_properties($groupId);
+
                 if ($fp = @fopen($filePath, "w")) {
                     fputs($fp, $new_data);
                     fclose($fp);
