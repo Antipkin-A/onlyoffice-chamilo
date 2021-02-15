@@ -46,8 +46,10 @@ $fileUrl = FileUtility::getFileUrl($courseId, $userId, $docId, $sessionId, $grou
 $isAllowToEdit = api_is_allowed_to_edit(true, true);
 $isMyDir = DocumentManager::is_my_shared_folder($userId, $docInfo["absolute_parent_path"], $sessionId);
 
+$type = "desktop";
+
 $config = [
-    "type" => "desktop",
+    "type" => $type,
     "documentType" => $docType,
     "document" => [
         "fileType" => $extension,
@@ -121,7 +123,7 @@ function getCallbackUrl($docId, $userId, $courseId, $sessionId, $groupId) {
 <style>
     #app-onlyoffice {
         display: flex;
-        min-height: calc(100% - 135px);
+        min-height: calc(100% - 140px);
         width: 112.1%;
         box-sizing: border-box;
         position: relative;
@@ -129,7 +131,7 @@ function getCallbackUrl($docId, $userId, $courseId, $sessionId, $groupId) {
     }
     #app > iframe {
         position: absolute;
-        top: -21px;
+        top: 0px;
         left: 0px;
     }
     body {
@@ -141,22 +143,29 @@ function getCallbackUrl($docId, $userId, $courseId, $sessionId, $groupId) {
     .breadcrumb {
         display: none;
     }
-    .navbar-default {
-        margin-bottom: 0px;
-    }
 </style>
 <script type="text/javascript" src=<?php echo $docApiUrl?>></script>
 <script type="text/javascript">
-    var onAppReady = function () {
+        var onAppReady = function () {
         innerAlert("Document editor ready");
     };
     var connectEditor = function () {
+        var userAgentMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
         var config = <?php echo json_encode($config)?>;
+
+        if (userAgentMobile) {
+            config.type = "mobile";
+        }
+
         config.events = {
             "onAppReady": onAppReady
         };
 
         docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+
+        $(".navbar").css({
+            "margin-bottom": "0px"
+        });
     }
 
     if (window.addEventListener) {
