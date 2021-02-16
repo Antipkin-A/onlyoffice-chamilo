@@ -84,7 +84,7 @@ if ($form->validate()) {
     $filePath = $folderPath . "/" . $fileName;
 
     if (file_exists($filePath)) {
-        Display::addFlash(Display::return_message(get_lang("file is exist"), "error"));
+        Display::addFlash(Display::return_message(get_lang("fileIsExist"), "error"));
         goto display;
     }
 
@@ -119,7 +119,7 @@ if ($form->validate()) {
         }
 
     } else {
-        Display::addFlash(Display::return_message(get_lang("impossible"), "error"));
+        Display::addFlash(Display::return_message(get_lang("impossibleCreateFile"), "error"));
     }
 }
 
@@ -127,7 +127,7 @@ display:
     $goBackUrl = $goBackUrl ?: $_SERVER["HTTP_REFERER"];
     $actionsLeft = '<a href="'. $goBackUrl . '">' . Display::return_icon("back.png", get_lang("Back") . " " . get_lang("To") . " " . get_lang("DocumentsOverview"), "", ICON_SIZE_MEDIUM) . "</a>";
 
-    Display::display_header(get_lang("create new document"));
+    Display::display_header(get_lang("createNewDocument"));
     echo Display::toolbarAction("actions-documents", [$actionsLeft]);
     echo $form->returnForm();
     Display::display_footer();

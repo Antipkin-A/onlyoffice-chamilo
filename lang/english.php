@@ -10,12 +10,12 @@ $strings["documentServerUrl"] = "Document Editing Service address";
 $strings["openByOnlyoffice"] = "Open by onlyoffice";
 $strings["createNew"] = "Create new";
 $strings["title"] = "Title";
-$strings["chooseFileFormat"] = "Title";
+$strings["chooseFileFormat"] = "Choose file format";
 $strings["document"] = "Document";
 $strings["spreadsheet"] = "Spreadsheet";
 $strings["presentation"] = "Presentation";
 $strings["create"] = "Create";
-$strings["file is exist"] = "File already exist";
-$strings["impossible"] = "Impossible to create file";
-$strings["create new document"] = "Create new document";
+$strings["fileIsExist"] = "File already exist";
+$strings["impossibleCreateFile"] = "Impossible to create file";
+$strings["createNewDocument"] = "Create new document";
 
