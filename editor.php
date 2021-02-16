@@ -63,6 +63,14 @@ $config = [
         "user" => [
             "id" => $userId,
             "name" => $userInfo["username"]
+        ],
+        "customization" => [
+            "goback" => [
+                "blank" => false,
+                "requestClose" => false,
+                "text" => get_lang("Back"),
+                "url" => $_SERVER["HTTP_REFERER"]
+            ]
         ]
     ]
 ];
