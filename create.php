@@ -2,6 +2,8 @@
 
 require_once __DIR__.'/../../main/inc/global.inc.php';
 
+use ChamiloSession as Session;
+
 $plugin = OnlyofficePlugin::create();
 
 $mapFileFormat = [
@@ -9,6 +11,23 @@ $mapFileFormat = [
     "spreadsheet" => get_lang("spreadsheet"),
     "presentation" => get_lang("presentation")
 ];
+
+$userId = $_GET["userId"];
+$sessionId = $_GET["sessionId"];
+$docId = $_GET["folderId"];
+$courseId = $_GET["courseId"];
+
+$courseInfo = api_get_course_info_by_id($courseId);
+$courseCode = $courseInfo["code"];
+
+$docInfo = DocumentManager::get_document_data_by_id($docId, $courseCode, true, $sessionId);
+
+$groupRights = Session::read('group_member_with_upload_rights');
+$isAllowToEdit = api_is_allowed_to_edit(true, true);
+$isMyDir = DocumentManager::is_my_shared_folder($userId, $docInfo["absolute_path"], $sessionId);
+if (!($isAllowToEdit || $isMyDir || $groupRights)) {
+    api_not_allowed(true);
+}
 
 $form = new FormValidator("doc_create",
                           "post",
